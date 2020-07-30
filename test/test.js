@@ -1,25 +1,27 @@
 /* eslint-disable func-names */
 /* eslint-disable node/no-unpublished-require */
-require("dotenv").config();
-
-console.log(process.env.PORT);
 const chai = require("chai");
-const chaiHttp = require("chai-http");
-const app = require("../app");
 
 const { expect } = chai;
+
+const chaiHttp = require("chai-http");
+const { app, queryInfura, storeBlock } = require("../app");
+
 chai.use(chaiHttp);
 
-describe("Redeem Endpoints", function () {
-  before(async function () {});
-
-  beforeEach(async function () {});
-
-  it("Succesfully create a redeem.", async function () {
-    const json = {};
-    const res = await chai.request(app).post("/test").send(json);
-    expect(res.statusCode).to.equals(200);
+describe("Tests", function () {
+  it("Query Infura", async function () {
+    const response = await queryInfura();
+    expect(response.result).to.not.equals(null);
   });
 
-  after(async function () {});
+  it("Update Database with new blocks", async function () {
+    const response = await storeBlock();
+    expect(response).to.equals(true);
+  });
+  it("Get Blocks Endpoint", async function () {
+    const res = await chai.request(app).get("/blocks").send();
+    expect(res.statusCode).to.equals(200);
+    expect(res.body.data).to.not.equals(null);
+  });
 });
