@@ -1,24 +1,12 @@
-require("dotenv").config();
-const express = require("express");
-const bodyParser = require("body-parser");
-const cors = require("cors");
+const fs = require("fs");
 
-const app = express();
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cors());
-const index = require("./routes/index");
+const filename = "data.txt";
 
-index.set(app);
-const port = process.env.PORT;
-
-// eslint-disable-next-line no-unused-vars
-app.use((error, req, res, next) => {
-  res.json({ message: error.message });
+fs.readFile(filename, "utf8", function (err, data) {
+  if (err) throw err;
+  console.log(`OK: ${filename}`);
+  const lines = data.split(/\r?\n/);
+  console.log(lines[0]);
+  const line = lines[0].split(" ");
+  console.log(line);
 });
-
-app.listen(port, () =>
-  console.log(`Example app listening at http://localhost:${port}`)
-);
-
-module.exports = app;
